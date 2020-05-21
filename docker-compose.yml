@@ -1,0 +1,23 @@
+version: '3'
+services:
+    client:
+        build: .
+        command: client
+        container_name: echo-client
+        ports: 
+            - 3000:3000
+        environment: 
+            PORT: 3000
+            HTTP_SERVER: server:3001
+            GRPC_SERVER: server:3002
+
+    server:
+        build: .
+        command: server
+        container_name: echo-server
+        ports: 
+            - 3001:3001
+            - 3002:3002
+        environment: 
+            HTTP_PORT: 3001
+            GRPC_PORT: 3002

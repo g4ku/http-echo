@@ -1,0 +1,19 @@
+{
+  "name": "http-echo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@grpc/proto-loader": "^0.5.4",
+    "axios": "^0.19.2",
+    "express": "^4.17.1",
+    "grpc": "^1.24.2",
+    "internal-ip": "^6.0.0",
+    "morgan": "^1.10.0"
+  }
+}
