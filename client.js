@@ -9,13 +9,13 @@ const protoLoader = require("@grpc/proto-loader");
 const axios = require("axios").default;
 
 const PORT = process.env.PORT || 3000;
-const HTTP_SERVER = process.env.HTTP_SERVER || "localhost:3001";
-const GRPC_SERVER = process.env.GRPC_SERVER || "localhost:3002";
+const HTTP_ADDR = process.env.HTTP_ADDR || "localhost:3001";
+const GRPC_ADDR = process.env.GRPC_ADDR || "localhost:3002";
 
 const packageDefinition = protoLoader.loadSync(__dirname + "/echo.proto");
 const echo_proto = grpc.loadPackageDefinition(packageDefinition).echo;
 const client = new echo_proto.EchoService(
-  GRPC_SERVER,
+  GRPC_ADDR,
   grpc.credentials.createInsecure()
 );
 
@@ -30,7 +30,7 @@ app.get("/http", async (req, res) => {
   const ipv4 = await internalIp.v4();
   try {
     const data = await axios
-      .get("http://" + HTTP_SERVER)
+      .get("http://" + HTTP_ADDR)
       .then((res) => res.data);
     res.send(`${ipv4} -> ${data}`);
   } catch (error) {

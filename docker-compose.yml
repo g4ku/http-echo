@@ -8,8 +8,8 @@ services:
             - 3000:3000
         environment: 
             PORT: 3000
-            HTTP_SERVER: server:3001
-            GRPC_SERVER: server:3002
+            HTTP_ADDR: server:3001
+            GRPC_ADDR: server:3002
 
     server:
         build: .
