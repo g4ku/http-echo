@@ -6,6 +6,9 @@ const logger = require("morgan");
 const internalIp = require("internal-ip");
 const grpc = require("grpc");
 const protoLoader = require("@grpc/proto-loader");
+const health = require("grpc-health-check");
+const healthMessages = require("grpc-health-check/v1/health_pb");
+const ServingStatus = healthMessages.HealthCheckResponse.ServingStatus;
 
 const HTTP_PORT = process.env.HTTP_PORT || 3001;
 const GRPC_PORT = process.env.GRPC_PORT || 3002;
@@ -29,10 +32,16 @@ server.addService(echo_proto.EchoService.service, {
   },
 });
 
+const statusMap = {
+  EchoService: ServingStatus.SERVING,
+  "": ServingStatus.NOT_SERVING,
+};
+let healthImpl = new health.Implementation(statusMap);
+
+server.addService(health.service, healthImpl);
+
 server.bind(`0.0.0.0:${GRPC_PORT}`, grpc.ServerCredentials.createInsecure());
 server.start();
 console.log(`(gRPC) Listening on port ${GRPC_PORT}`);
 
-app.listen(HTTP_PORT, () =>
-  console.log(`(HTTP) Listening on port ${HTTP_PORT}`)
-);
+app.listen(HTTP_PORT, () => console.log(`(HTTP) Listening on port ${HTTP_PORT}`));

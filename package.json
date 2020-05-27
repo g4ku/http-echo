@@ -13,6 +13,7 @@
     "axios": "^0.19.2",
     "express": "^4.17.1",
     "grpc": "^1.24.2",
+    "grpc-health-check": "^1.8.0",
     "internal-ip": "^6.0.0",
     "morgan": "^1.10.0"
   }
