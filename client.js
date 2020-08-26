@@ -3,10 +3,10 @@
 const express = require("express");
 const app = express();
 const logger = require("morgan");
-const internalIp = require("internal-ip");
 const grpc = require("grpc");
 const protoLoader = require("@grpc/proto-loader");
 const axios = require("axios").default;
+const utility = require("./utility");
 
 const PORT = process.env.PORT || 3000;
 const HTTP_ADDR = process.env.HTTP_ADDR || "localhost:3001";
@@ -22,29 +22,26 @@ const client = new echo_proto.EchoService(
 app.use(logger("combined"));
 
 app.get("/", async (req, res) => {
-  const ipv4 = await internalIp.v4();
-  res.send(`HELLO WORLD! (${ipv4})`);
+  res.send(`HELLO WORLD! (${await utility.ipv4})`);
 });
 
 app.get("/http", async (req, res) => {
-  const ipv4 = await internalIp.v4();
   try {
     const data = await axios
       .get("http://" + HTTP_ADDR)
       .then((res) => res.data);
-    res.send(`${ipv4} -> ${data}`);
+    res.send(`${await utility.ipv4} -> ${data}`);
   } catch (error) {
     res.status(500).send(`[ERROR] ${error}`);
   }
 });
 
 app.get("/grpc", async (req, res) => {
-  const ipv4 = await internalIp.v4();
-  client.echo({}, (err, response) => {
+  client.echo({}, async (err, response) => {
     if (err) {
       return res.status(500).send(`[ERROR] ${err}`);
     }
-    res.send(`${ipv4} -> ${response.message}`);
+    res.send(`${await utility.ipv4} -> ${response.message}`);
   });
 });
 
